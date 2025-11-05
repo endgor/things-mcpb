@@ -51,7 +51,9 @@ export const TOOL_DEFINITIONS = [
         }
       },
       required: ["title"]
-    }
+    },
+    readOnlyHint: false,
+    destructiveHint: false
   },
   {
     name: "add_project",
@@ -95,7 +97,9 @@ export const TOOL_DEFINITIONS = [
         }
       },
       required: ["title"]
-    }
+    },
+    readOnlyHint: false,
+    destructiveHint: false
   },
   {
     name: "get_inbox",
@@ -103,7 +107,8 @@ export const TOOL_DEFINITIONS = [
     inputSchema: {
       type: "object",
       properties: {}
-    }
+    },
+    readOnlyHint: true
   },
   {
     name: "get_today",
@@ -111,7 +116,8 @@ export const TOOL_DEFINITIONS = [
     inputSchema: {
       type: "object",
       properties: {}
-    }
+    },
+    readOnlyHint: true
   },
   {
     name: "get_upcoming",
@@ -119,7 +125,8 @@ export const TOOL_DEFINITIONS = [
     inputSchema: {
       type: "object",
       properties: {}
-    }
+    },
+    readOnlyHint: true
   },
   {
     name: "get_anytime",
@@ -127,7 +134,8 @@ export const TOOL_DEFINITIONS = [
     inputSchema: {
       type: "object",
       properties: {}
-    }
+    },
+    readOnlyHint: true
   },
   {
     name: "get_someday",
@@ -135,7 +143,8 @@ export const TOOL_DEFINITIONS = [
     inputSchema: {
       type: "object",
       properties: {}
-    }
+    },
+    readOnlyHint: true
   },
   {
     name: "get_projects",
@@ -149,7 +158,8 @@ export const TOOL_DEFINITIONS = [
           default: false
         }
       }
-    }
+    },
+    readOnlyHint: true
   },
   {
     name: "get_areas",
@@ -163,7 +173,8 @@ export const TOOL_DEFINITIONS = [
           default: false
         }
       }
-    }
+    },
+    readOnlyHint: true
   },
   {
     name: "get_tags",
@@ -171,7 +182,8 @@ export const TOOL_DEFINITIONS = [
     inputSchema: {
       type: "object",
       properties: {}
-    }
+    },
+    readOnlyHint: true
   },
   {
     name: "get_todos",
@@ -189,7 +201,8 @@ export const TOOL_DEFINITIONS = [
           default: true
         }
       }
-    }
+    },
+    readOnlyHint: true
   },
   {
     name: "get_logbook",
@@ -209,7 +222,8 @@ export const TOOL_DEFINITIONS = [
           maximum: 100
         }
       }
-    }
+    },
+    readOnlyHint: true
   },
   {
     name: "get_trash",
@@ -217,7 +231,8 @@ export const TOOL_DEFINITIONS = [
     inputSchema: {
       type: "object",
       properties: {}
-    }
+    },
+    readOnlyHint: true
   },
   {
     name: "get_tagged_items",
@@ -231,7 +246,8 @@ export const TOOL_DEFINITIONS = [
         }
       },
       required: ["tag_title"]
-    }
+    },
+    readOnlyHint: true
   },
   {
     name: "search_todos",
@@ -245,7 +261,8 @@ export const TOOL_DEFINITIONS = [
         }
       },
       required: ["query"]
-    }
+    },
+    readOnlyHint: true
   },
   {
     name: "search_advanced",
@@ -276,7 +293,8 @@ export const TOOL_DEFINITIONS = [
         }
       },
       required: ["query"]
-    }
+    },
+    readOnlyHint: true
   },
   {
     name: "get_recent",
@@ -290,7 +308,8 @@ export const TOOL_DEFINITIONS = [
           default: 7
         }
       }
-    }
+    },
+    readOnlyHint: true
   },
   {
     name: "update_todo",
@@ -338,7 +357,9 @@ export const TOOL_DEFINITIONS = [
         }
       },
       required: ["id"]
-    }
+    },
+    readOnlyHint: false,
+    destructiveHint: false
   },
   {
     name: "update_project",
@@ -381,7 +402,9 @@ export const TOOL_DEFINITIONS = [
         }
       },
       required: ["id"]
-    }
+    },
+    readOnlyHint: false,
+    destructiveHint: false
   },
   {
     name: "show_item",
@@ -395,7 +418,8 @@ export const TOOL_DEFINITIONS = [
         }
       },
       required: ["id"]
-    }
+    },
+    readOnlyHint: true
   },
   {
     name: "search_items",
@@ -409,6 +433,7 @@ export const TOOL_DEFINITIONS = [
         }
       },
       required: ["query"]
-    }
+    },
+    readOnlyHint: true
   }
 ];
