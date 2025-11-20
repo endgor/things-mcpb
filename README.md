@@ -1,6 +1,20 @@
 # Things MCPB - Claude Desktop Extension
 
+> **Note:** This is a fork of [mbmccormick/things-mcpb](https://github.com/mbmccormick/things-mcpb) with additional features and improvements.
+
 A comprehensive Claude Desktop Extension that provides seamless integration with Things 3, enabling you to manage your complete task workflow directly from Claude conversations using AppleScript via secure JavaScript for Automation (JXA).
+
+## Fork Improvements
+
+This fork adds the following enhancements over the original:
+
+- **Enhanced When Parameter**: Support for `today`, `tomorrow`, `evening`, `anytime`, `someday` keywords
+- **Delete Operations**: `delete_todo`, `delete_project`, `empty_trash` for complete lifecycle management
+- **Move Todo**: `move_todo` to relocate todos between projects, areas, and lists
+- **Tag Management**: `get_unused_tags` and `delete_tag` for tag cleanup
+- **Area CRUD**: Full area management with `add_area`, `update_area`, `delete_area`
+- **Security Fix**: Removed hardcoded auth token, requires `THINGS_AUTH_TOKEN` environment variable
+- **Additional Tests**: Unit tests for new features
 
 ## Download
 

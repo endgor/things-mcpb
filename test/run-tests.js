@@ -18,19 +18,21 @@ import path from 'path';
 const TEST_FILES = [
   // Unit tests (no Things 3 required)
   'unit/parameter-processor.test.js',
-  'unit/input-validator.test.js', 
+  'unit/input-validator.test.js',
   'unit/date-handling.test.js',
   'unit/tag-formatting.test.js',
   'unit/list-ids.test.js',
-  
+  'unit/when-parameter.test.js',
+  'unit/new-tools.test.js',
+
   // Build system tests
   'unit/build-system.test.js',
   'unit/script-bundling.test.js',
-  
+
   // MCP server tests
   'unit/mcp-server.test.js',
   'unit/tool-definitions.test.js',
-  
+
   // JXA execution tests (mock)
   'unit/jxa-executor.test.js',
   

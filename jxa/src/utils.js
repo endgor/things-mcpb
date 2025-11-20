@@ -122,8 +122,10 @@ export function applyWhenValue(things, item, whenValue) {
           const itemId = item.id();
           const app = Application.currentApplication();
           app.includeStandardAdditions = true;
-          // Get auth token from environment or use default
-          const authToken = app.systemAttribute('THINGS_AUTH_TOKEN') || 'wF9LawEAAACEm9yBAQAAAA';
+          const authToken = app.systemAttribute('THINGS_AUTH_TOKEN');
+          if (!authToken) {
+            throw new Error('THINGS_AUTH_TOKEN environment variable required for anytime/someday scheduling');
+          }
           app.doShellScript(`open "things:///update?id=${itemId}&when=${processed.type}&auth-token=${authToken}"`);
         } catch (e) {
           // URL scheme failed - auth token may be missing or invalid
