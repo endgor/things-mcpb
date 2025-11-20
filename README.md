@@ -220,9 +220,23 @@ Show me what I completed last week, what's in my logbook, and help me organize m
 - **`when`**: When scheduled to work on (appears in Today/Upcoming)
   - Keywords: `today`, `tomorrow`, `evening`, `anytime`, `someday`
   - Or date format: YYYY-MM-DD (e.g., "2024-03-15")
-  - Note: `anytime`/`someday` require `THINGS_AUTH_TOKEN` environment variable
+  - Note: `anytime`/`someday` require `THINGS_AUTH_TOKEN` (see setup below)
 - **`deadline`**: When actually due (final deadline)
 - **Format**: YYYY-MM-DD (e.g., "2024-03-15")
+
+### Auth Token Setup (Required for Anytime/Someday)
+
+The `anytime` and `someday` keywords use the Things URL scheme which requires an auth token.
+
+1. **Get your token from Things 3:**
+   - Things 3 → Settings → General → Enable Things URLs → **Manage**
+
+2. **Add to your shell profile** (`~/.zshrc` or `~/.bashrc`):
+   ```bash
+   export THINGS_AUTH_TOKEN="your-token-here"
+   ```
+
+3. **Restart your terminal** or run `source ~/.zshrc`
 
 ### Organization Parameters
 - **`list_title`/`area_title`**: Use names for easy reference
