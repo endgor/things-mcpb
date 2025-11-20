@@ -14,11 +14,19 @@ const BUILD_DIR = 'jxa/build';
 
 // Operation definitions
 const OPERATIONS = [
-  'add_todo', 'update_todo', 'get_todos',
-  'add_project', 'update_project', 'get_projects',
+  // Todo operations
+  'add_todo', 'update_todo', 'get_todos', 'delete_todo', 'move_todo',
+  // Project operations
+  'add_project', 'update_project', 'get_projects', 'delete_project',
+  // List operations
   'get_inbox', 'get_today', 'get_upcoming', 'get_anytime', 'get_someday',
-  'get_logbook', 'get_trash', 'search_todos', 'search_items', 'search_advanced',
-  'get_recent', 'show_item', 'get_tags', 'get_tagged_items', 'get_areas'
+  'get_logbook', 'get_trash', 'empty_trash',
+  // Search operations
+  'search_todos', 'search_items', 'search_advanced', 'get_recent', 'show_item',
+  // Tag operations
+  'get_tags', 'get_tagged_items', 'get_unused_tags', 'delete_tag',
+  // Area operations
+  'get_areas', 'add_area', 'update_area', 'delete_area'
 ];
 
 // Build configuration optimized for JXA

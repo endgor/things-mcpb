@@ -164,11 +164,18 @@ function run(argv) {
     const [year, month, day] = dateString.split('-').map(Number);
     return new Date(year, month - 1, day, 0, 0, 0, 0);
   }
-  
+
   // ❌ WRONG: Date string interpreted as UTC, causes timezone shifts
   new Date(dateString + 'T00:00:00');
   ```
 - All date inputs are assumed to be in system local timezone
+
+**When Parameter Values**:
+- `when` supports: `today`, `tomorrow`, `evening`, `anytime`, `someday`, or `YYYY-MM-DD`
+- **Anytime/Someday require auth-token**: JXA doesn't support direct scheduling to these lists
+- Uses Things URL scheme with `THINGS_AUTH_TOKEN` environment variable
+- Get token from Things → Settings → General → Enable Things URLs → Manage
+- Set via: `export THINGS_AUTH_TOKEN=your-token-here`
 
 **Tag Format**:
 - Things 3 uses comma-separated strings: `"work, urgent, project"`  

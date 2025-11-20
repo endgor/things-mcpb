@@ -95,4 +95,41 @@ export class ListOperations {
     const trash = safeGetList(things, LIST_IDS.TRASH);
     return trash.map(mapTodo);
   }
+
+  /**
+   * Empty trash (permanently delete all trashed items)
+   */
+  static emptyTrash(things, params) {
+    try {
+      const trashList = things.lists.byId(LIST_IDS.TRASH);
+      const trashedItems = trashList.toDos();
+      const count = trashedItems.length;
+
+      // Delete each item permanently
+      for (let i = trashedItems.length - 1; i >= 0; i--) {
+        try {
+          things.delete(trashedItems[i]);
+        } catch (e) {
+          // Individual delete failed
+        }
+      }
+
+      return {
+        emptied: true,
+        deletedCount: count,
+        message: `Permanently deleted ${count} item(s) from trash`
+      };
+    } catch (e) {
+      // Try alternative method using emptyTrash command if available
+      try {
+        things.emptyTrash();
+        return {
+          emptied: true,
+          message: 'Trash emptied successfully'
+        };
+      } catch (e2) {
+        throw new Error(`Failed to empty trash: ${e.message}`);
+      }
+    }
+  }
 }

@@ -21,7 +21,7 @@ export const TOOL_DEFINITIONS = [
         },
         when: {
           type: "string",
-          description: "Optional when date (when scheduled to work on) in YYYY-MM-DD format"
+          description: "When to work on: 'today', 'tomorrow', 'evening', 'anytime', 'someday', or YYYY-MM-DD date"
         },
         deadline: {
           type: "string",
@@ -71,7 +71,7 @@ export const TOOL_DEFINITIONS = [
         },
         when: {
           type: "string",
-          description: "Optional when date (when scheduled to work on) in YYYY-MM-DD format"
+          description: "When to work on: 'today', 'tomorrow', 'evening', 'anytime', 'someday', or YYYY-MM-DD date"
         },
         deadline: {
           type: "string",
@@ -177,6 +177,72 @@ export const TOOL_DEFINITIONS = [
     readOnlyHint: true
   },
   {
+    name: "add_area",
+    description: "Create a new area in Things",
+    inputSchema: {
+      type: "object",
+      properties: {
+        title: {
+          type: "string",
+          description: "The name of the area"
+        },
+        tags: {
+          type: "array",
+          items: { type: "string" },
+          description: "Optional array of tag names"
+        }
+      },
+      required: ["title"]
+    },
+    readOnlyHint: false,
+    destructiveHint: false
+  },
+  {
+    name: "update_area",
+    description: "Update an existing area in Things",
+    inputSchema: {
+      type: "object",
+      properties: {
+        id: {
+          type: "string",
+          description: "The ID of the area to update"
+        },
+        title: {
+          type: "string",
+          description: "New name for the area"
+        },
+        tags: {
+          type: "array",
+          items: { type: "string" },
+          description: "Array of tag names"
+        },
+        collapsed: {
+          type: "boolean",
+          description: "Whether the area is collapsed in the sidebar"
+        }
+      },
+      required: ["id"]
+    },
+    readOnlyHint: false,
+    destructiveHint: false
+  },
+  {
+    name: "delete_area",
+    description: "Delete an area from Things. Items in the area will be moved to no area.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        id: {
+          type: "string",
+          description: "The ID of the area to delete"
+        }
+      },
+      required: ["id"]
+    },
+    readOnlyHint: false,
+    destructiveHint: true
+  },
+  {
     name: "get_tags",
     description: "Get all tags from Things",
     inputSchema: {
@@ -184,6 +250,31 @@ export const TOOL_DEFINITIONS = [
       properties: {}
     },
     readOnlyHint: true
+  },
+  {
+    name: "get_unused_tags",
+    description: "Get tags that are not assigned to any todo or project",
+    inputSchema: {
+      type: "object",
+      properties: {}
+    },
+    readOnlyHint: true
+  },
+  {
+    name: "delete_tag",
+    description: "Delete a tag by removing it from all items. Note: This removes the tag from all todos and projects.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        tag_name: {
+          type: "string",
+          description: "The name of the tag to delete"
+        }
+      },
+      required: ["tag_name"]
+    },
+    readOnlyHint: false,
+    destructiveHint: true
   },
   {
     name: "get_todos",
@@ -233,6 +324,84 @@ export const TOOL_DEFINITIONS = [
       properties: {}
     },
     readOnlyHint: true
+  },
+  {
+    name: "delete_todo",
+    description: "Delete a to-do (move to trash)",
+    inputSchema: {
+      type: "object",
+      properties: {
+        id: {
+          type: "string",
+          description: "The ID of the to-do to delete"
+        }
+      },
+      required: ["id"]
+    },
+    readOnlyHint: false,
+    destructiveHint: true
+  },
+  {
+    name: "move_todo",
+    description: "Relocate a to-do to a different project or area",
+    inputSchema: {
+      type: "object",
+      properties: {
+        id: {
+          type: "string",
+          description: "The ID of the to-do to move"
+        },
+        project_id: {
+          type: "string",
+          description: "ID of the project to move to"
+        },
+        project_title: {
+          type: "string",
+          description: "Name of the project to move to"
+        },
+        area_id: {
+          type: "string",
+          description: "ID of the area to move to"
+        },
+        area_title: {
+          type: "string",
+          description: "Name of the area to move to"
+        },
+        list_id: {
+          type: "string",
+          description: "ID of the built-in list to move to (e.g., TMInboxListSource)"
+        }
+      },
+      required: ["id"]
+    },
+    readOnlyHint: false,
+    destructiveHint: false
+  },
+  {
+    name: "delete_project",
+    description: "Delete a project (move to trash)",
+    inputSchema: {
+      type: "object",
+      properties: {
+        id: {
+          type: "string",
+          description: "The ID of the project to delete"
+        }
+      },
+      required: ["id"]
+    },
+    readOnlyHint: false,
+    destructiveHint: true
+  },
+  {
+    name: "empty_trash",
+    description: "Permanently delete all items in trash",
+    inputSchema: {
+      type: "object",
+      properties: {}
+    },
+    readOnlyHint: false,
+    destructiveHint: true
   },
   {
     name: "get_tagged_items",
@@ -331,7 +500,7 @@ export const TOOL_DEFINITIONS = [
         },
         when: {
           type: "string",
-          description: "Optional when date (when scheduled to work on) in YYYY-MM-DD format"
+          description: "When to work on: 'today', 'tomorrow', 'evening', 'anytime', 'someday', or YYYY-MM-DD date"
         },
         deadline: {
           type: "string",
@@ -381,7 +550,7 @@ export const TOOL_DEFINITIONS = [
         },
         when: {
           type: "string",
-          description: "Optional when date (when scheduled to work on) in YYYY-MM-DD format"
+          description: "When to work on: 'today', 'tomorrow', 'evening', 'anytime', 'someday', or YYYY-MM-DD date"
         },
         deadline: {
           type: "string",

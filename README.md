@@ -18,6 +18,14 @@ A comprehensive Claude Desktop Extension that provides seamless integration with
 
 ## Recent Improvements
 
+### Version 1.6.0
+- **🗓️ Enhanced When Parameter**: Support for `today`, `tomorrow`, `evening`, `anytime`, `someday` keywords in addition to YYYY-MM-DD dates
+- **🗑️ Delete Operations**: New `delete_todo`, `delete_project`, and `empty_trash` tools for complete lifecycle management
+- **📦 Move Todo**: New `move_todo` tool to relocate todos between projects, areas, and lists
+- **🏷️ Tag Management**: New `get_unused_tags` and `delete_tag` tools for tag cleanup
+- **📁 Area CRUD**: Full area management with `add_area`, `update_area`, and `delete_area` tools
+- **🔧 Bug Fixes**: Fixed move_todo to use property assignment for projects/areas instead of move command
+
 ### Version 1.4.0
 - **📦 MCPB Format Migration**: Updated from DXT to the new MCPB (MCP Bundle) format specification v0.2
 - **📦 Package Updates**: Updated @modelcontextprotocol/sdk to v1.20.1 and esbuild to v0.25.11
@@ -117,11 +125,47 @@ A comprehensive Claude Desktop Extension that provides seamless integration with
 - `checklist_items`: Array of checklist items. Appends to existing notes as formatted list
 
 #### `update_project` - Update existing project
-**Required**: `id`  
+**Required**: `id`
 **Optional**: `title`, `notes`, `when`, `deadline`, `tags`, `completed`, `canceled`
 - `tags`: Array of tag names. Use `[]` to remove all tags
 
 #### `show_item` - Show item details
+**Required**: `id`
+
+### 🗑️ Delete & Move Tools
+
+#### `delete_todo` - Delete a to-do (move to trash)
+**Required**: `id`
+
+#### `delete_project` - Delete a project (move to trash)
+**Required**: `id`
+
+#### `move_todo` - Relocate a to-do
+**Required**: `id`
+**Optional**: `project_id`, `project_title`, `area_id`, `area_title`, `list_id`
+
+#### `empty_trash` - Permanently delete all trashed items
+**Parameters**: None
+
+### 🏷️ Tag Management Tools
+
+#### `get_unused_tags` - Get tags not assigned to any item
+**Parameters**: None
+
+#### `delete_tag` - Remove a tag from all items
+**Required**: `tag_name`
+
+### 📁 Area Management Tools
+
+#### `add_area` - Create a new area
+**Required**: `title`
+**Optional**: `tags`
+
+#### `update_area` - Update an existing area
+**Required**: `id`
+**Optional**: `title`, `tags`, `collapsed`
+
+#### `delete_area` - Delete an area
 **Required**: `id`
 
 ## Usage Examples
@@ -160,6 +204,9 @@ Show me what I completed last week, what's in my logbook, and help me organize m
 
 ### Date Parameters
 - **`when`**: When scheduled to work on (appears in Today/Upcoming)
+  - Keywords: `today`, `tomorrow`, `evening`, `anytime`, `someday`
+  - Or date format: YYYY-MM-DD (e.g., "2024-03-15")
+  - Note: `anytime`/`someday` require `THINGS_AUTH_TOKEN` environment variable
 - **`deadline`**: When actually due (final deadline)
 - **Format**: YYYY-MM-DD (e.g., "2024-03-15")
 

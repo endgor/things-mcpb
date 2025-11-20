@@ -59,17 +59,45 @@ export class InputValidator {
     if (typeof value !== 'string') {
       throw new Error(`${fieldName} must be a string`);
     }
-    
+
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
     if (!dateRegex.test(value)) {
       throw new Error(`${fieldName} must be in YYYY-MM-DD format`);
     }
-    
+
     const date = new Date(value + 'T00:00:00');
     if (isNaN(date.getTime())) {
       throw new Error(`${fieldName} is not a valid date`);
     }
-    
+
+    return value;
+  }
+
+  /**
+   * Validate when input - can be string keyword or date
+   */
+  static validateWhenInput(value, fieldName) {
+    if (typeof value !== 'string') {
+      throw new Error(`${fieldName} must be a string`);
+    }
+
+    // Valid string keywords
+    const validKeywords = ['today', 'tomorrow', 'evening', 'anytime', 'someday'];
+    if (validKeywords.includes(value.toLowerCase())) {
+      return value.toLowerCase();
+    }
+
+    // Otherwise must be a date
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(value)) {
+      throw new Error(`${fieldName} must be 'today', 'tomorrow', 'evening', 'anytime', 'someday', or YYYY-MM-DD format`);
+    }
+
+    const date = new Date(value + 'T00:00:00');
+    if (isNaN(date.getTime())) {
+      throw new Error(`${fieldName} is not a valid date`);
+    }
+
     return value;
   }
   
@@ -124,7 +152,7 @@ export class ParameterProcessor {
       processed.name = params.title;
       delete processed.title;
     }
-    
+
     // when (user-friendly) → activation_date (Things 3 internal)
     if (params.when !== undefined) {
       processed.activation_date = params.when;

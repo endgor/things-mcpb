@@ -35,6 +35,12 @@ function run(argv) {
       case 'get_todos':
         result = TodoOperations.getAll(things, params);
         break;
+      case 'delete_todo':
+        result = TodoOperations.delete(things, params);
+        break;
+      case 'move_todo':
+        result = TodoOperations.move(things, params);
+        break;
         
       // Project operations
       case 'add_project':
@@ -45,6 +51,9 @@ function run(argv) {
         break;
       case 'get_projects':
         result = ProjectOperations.getAll(things, params);
+        break;
+      case 'delete_project':
+        result = ProjectOperations.delete(things, params);
         break;
         
       // List operations (inbox, today, etc.)
@@ -68,6 +77,9 @@ function run(argv) {
         break;
       case 'get_trash':
         result = ListOperations.getTrash(things, params);
+        break;
+      case 'empty_trash':
+        result = ListOperations.emptyTrash(things, params);
         break;
         
       // Search operations
@@ -94,10 +106,25 @@ function run(argv) {
       case 'get_tagged_items':
         result = TagOperations.getTaggedItems(things, params);
         break;
+      case 'get_unused_tags':
+        result = TagOperations.getUnusedTags(things, params);
+        break;
+      case 'delete_tag':
+        result = TagOperations.deleteTag(things, params);
+        break;
         
       // Area operations
       case 'get_areas':
         result = AreaOperations.getAll(things, params);
+        break;
+      case 'add_area':
+        result = AreaOperations.add(things, params);
+        break;
+      case 'update_area':
+        result = AreaOperations.update(things, params);
+        break;
+      case 'delete_area':
+        result = AreaOperations.delete(things, params);
         break;
         
       default:

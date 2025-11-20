@@ -2,7 +2,7 @@
  * Project operations for Things 3
  */
 
-import { mapProject, mapTodo, formatTags, scheduleItem, parseLocalDate } from './utils.js';
+import { mapProject, mapTodo, formatTags, scheduleItem, parseLocalDate, applyWhenValue } from './utils.js';
 
 export class ProjectOperations {
   
@@ -26,9 +26,9 @@ export class ProjectOperations {
       project.tagNames = formatTags(params.tags);
     }
     
-    // Schedule activation date (when to work on)
+    // Apply when value (supports: today, tomorrow, evening, anytime, someday, or date)
     if (params.activation_date) {
-      scheduleItem(things, project, params.activation_date);
+      applyWhenValue(things, project, params.activation_date);
     }
     
     // Set due date (when actually due)
@@ -99,15 +99,10 @@ export class ProjectOperations {
     // Update dates
     if (params.activation_date !== undefined) {
       if (params.activation_date) {
-        scheduleItem(things, project, params.activation_date);
+        applyWhenValue(things, project, params.activation_date);
       } else {
-        // Clear activation date
-        try {
-          scheduleItem(things, project, '2099-12-31');
-          things.schedule(project, { for: null });
-        } catch (e) {
-          // Schedule clearing failed
-        }
+        // Clear activation date (moves to Anytime)
+        applyWhenValue(things, project, 'anytime');
       }
     }
     
@@ -124,10 +119,10 @@ export class ProjectOperations {
   static getAll(things, params) {
     const projects = things.projects();
     const includeItems = params.include_items || false;
-    
+
     return projects.map(project => {
       const mapped = mapProject(project);
-      
+
       if (includeItems) {
         try {
           mapped.todos = project.toDos().map(mapTodo);
@@ -135,8 +130,37 @@ export class ProjectOperations {
           mapped.todos = [];
         }
       }
-      
+
       return mapped;
     });
+  }
+
+  /**
+   * Delete a project (move to trash)
+   */
+  static delete(things, params) {
+    const project = things.projects.byId(params.id);
+    const projectInfo = {
+      id: project.id(),
+      name: project.name()
+    };
+
+    // Move to trash
+    try {
+      const trashList = things.lists.byId('TMTrashListSource');
+      things.move(project, { to: trashList });
+    } catch (e) {
+      // Fallback: try setting status to trashed
+      try {
+        project.status = 'trashed';
+      } catch (e2) {
+        throw new Error(`Failed to delete project: ${e.message}`);
+      }
+    }
+
+    return {
+      deleted: true,
+      project: projectInfo
+    };
   }
 }

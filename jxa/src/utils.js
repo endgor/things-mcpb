@@ -51,6 +51,91 @@ export function scheduleItem(things, item, dateString) {
 }
 
 /**
+ * Process 'when' value which can be a keyword or date string
+ * Keywords: today, tomorrow, evening, anytime, someday
+ * Returns: { type: 'date'|'anytime'|'someday'|'evening', date?: Date }
+ */
+export function processWhenValue(whenValue) {
+  if (!whenValue) return null;
+
+  const value = whenValue.toLowerCase();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  switch (value) {
+    case 'today':
+      return { type: 'date', date: today };
+
+    case 'tomorrow':
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      return { type: 'date', date: tomorrow };
+
+    case 'evening':
+      return { type: 'evening', date: today };
+
+    case 'anytime':
+      return { type: 'anytime' };
+
+    case 'someday':
+      return { type: 'someday' };
+
+    default:
+      // Treat as date string
+      const date = parseLocalDate(value);
+      if (date) {
+        return { type: 'date', date: date };
+      }
+      return null;
+  }
+}
+
+/**
+ * Apply 'when' value to an item
+ * Handles scheduling, evening, anytime, and someday
+ */
+export function applyWhenValue(things, item, whenValue) {
+  const processed = processWhenValue(whenValue);
+  if (!processed) return;
+
+  try {
+    switch (processed.type) {
+      case 'date':
+        things.schedule(item, { for: processed.date });
+        break;
+
+      case 'evening':
+        // Schedule for today with evening flag
+        try {
+          things.schedule(item, { for: processed.date, inEvening: true });
+        } catch (e) {
+          // Fallback without evening flag if not supported
+          things.schedule(item, { for: processed.date });
+        }
+        break;
+
+      case 'anytime':
+      case 'someday':
+        // Move to Anytime/Someday using URL scheme (JXA doesn't support direct scheduling)
+        // Requires THINGS_AUTH_TOKEN environment variable
+        try {
+          const itemId = item.id();
+          const app = Application.currentApplication();
+          app.includeStandardAdditions = true;
+          // Get auth token from environment or use default
+          const authToken = app.systemAttribute('THINGS_AUTH_TOKEN') || 'wF9LawEAAACEm9yBAQAAAA';
+          app.doShellScript(`open "things:///update?id=${itemId}&when=${processed.type}&auth-token=${authToken}"`);
+        } catch (e) {
+          // URL scheme failed - auth token may be missing or invalid
+        }
+        break;
+    }
+  } catch (e) {
+    // Scheduling/moving failed
+  }
+}
+
+/**
  * Convert tags array to comma-separated string (Things API format)
  */
 export function formatTags(tags) {
@@ -115,8 +200,24 @@ export function mapTodo(todo) {
   } catch (e) {
     result.area = null;
   }
-  
-  
+
+  // Add checklist items
+  try {
+    const checklistItems = todo.toDos();
+    if (checklistItems && checklistItems.length > 0) {
+      result.checklistItems = checklistItems.map(item => ({
+        id: item.id(),
+        name: item.name(),
+        status: item.status(),
+        completed: item.status() === 'completed'
+      }));
+    } else {
+      result.checklistItems = [];
+    }
+  } catch (e) {
+    result.checklistItems = [];
+  }
+
   return result;
 }
 

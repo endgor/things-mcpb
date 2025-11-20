@@ -2,7 +2,7 @@
  * Todo operations for Things 3
  */
 
-import { mapTodo, formatTags, scheduleItem, parseLocalDate } from './utils.js';
+import { mapTodo, formatTags, scheduleItem, parseLocalDate, applyWhenValue } from './utils.js';
 
 export class TodoOperations {
   
@@ -70,26 +70,47 @@ export class TodoOperations {
       todo.tagNames = formatTags(params.tags);
     }
 
-    // Schedule activation date (when to work on)
+    // Apply when value (supports: today, tomorrow, evening, anytime, someday, or date)
     if (params.activation_date) {
-      scheduleItem(things, todo, params.activation_date);
+      applyWhenValue(things, todo, params.activation_date);
     }
 
     // Set due date (when actually due)
     if (params.due_date) {
       todo.dueDate = parseLocalDate(params.due_date);
     }
-    
+
+    // Add checklist items
+    if (params.child_tasks && params.child_tasks.length > 0) {
+      params.child_tasks.forEach(itemTitle => {
+        try {
+          const checklistItem = things.ToDo({ name: itemTitle });
+          todo.toDos.push(checklistItem);
+        } catch (e) {
+          // Checklist item creation failed
+        }
+      });
+    }
+
     // Add to heading within project
     if (params.heading && params.list_id) {
       try {
         const project = things.projects.byId(params.list_id);
-        const todos = project.toDos();
-        const headings = todos.filter(t => t.name() === params.heading);
-        if (headings.length > 0) {
-          const heading = headings[0];
-          const headingIndex = todos.indexOf(heading);
-          things.move(todo, { to: project.toDos[headingIndex] });
+        // Get headings (toDoGroups) from the project
+        const headings = project.toDoGroups();
+        let targetHeading = null;
+
+        // Find the heading by name
+        for (let heading of headings) {
+          if (heading.name() === params.heading) {
+            targetHeading = heading;
+            break;
+          }
+        }
+
+        if (targetHeading) {
+          // Move todo to the heading
+          things.move(todo, { to: targetHeading });
         }
       } catch (e) {
         // Heading not found or move failed
@@ -142,23 +163,29 @@ export class TodoOperations {
     // Update dates
     if (params.activation_date !== undefined) {
       if (params.activation_date) {
-        scheduleItem(things, todo, params.activation_date);
+        applyWhenValue(things, todo, params.activation_date);
       } else {
-        // Clear activation date by scheduling to far future then back
-        try {
-          scheduleItem(things, todo, '2099-12-31');
-          things.schedule(todo, { for: null });
-        } catch (e) {
-          // Schedule clearing failed
-        }
+        // Clear activation date by scheduling to null (moves to Anytime)
+        applyWhenValue(things, todo, 'anytime');
       }
     }
     
     if (params.due_date !== undefined) {
       todo.dueDate = params.due_date ? parseLocalDate(params.due_date) : null;
     }
-    
-    
+
+    // Add/append checklist items
+    if (params.child_tasks && params.child_tasks.length > 0) {
+      params.child_tasks.forEach(itemTitle => {
+        try {
+          const checklistItem = things.ToDo({ name: itemTitle });
+          todo.toDos.push(checklistItem);
+        } catch (e) {
+          // Checklist item creation failed
+        }
+      });
+    }
+
     return mapTodo(todo);
   }
   
@@ -167,7 +194,7 @@ export class TodoOperations {
    */
   static getAll(things, params) {
     let todos;
-    
+
     if (params.project_uuid) {
       try {
         const project = things.projects.byId(params.project_uuid);
@@ -178,9 +205,9 @@ export class TodoOperations {
     } else {
       todos = things.toDos();
     }
-    
+
     const includeItems = params.include_items !== false; // default true
-    
+
     if (includeItems) {
       return todos.map(mapTodo);
     } else {
@@ -191,5 +218,100 @@ export class TodoOperations {
         status: todo.status()
       }));
     }
+  }
+
+  /**
+   * Delete a todo (move to trash)
+   */
+  static delete(things, params) {
+    const todo = things.toDos.byId(params.id);
+    const todoInfo = {
+      id: todo.id(),
+      name: todo.name()
+    };
+
+    // Move to trash
+    try {
+      const trashList = things.lists.byId('TMTrashListSource');
+      things.move(todo, { to: trashList });
+    } catch (e) {
+      // Fallback: try setting status to trashed
+      try {
+        todo.status = 'trashed';
+      } catch (e2) {
+        throw new Error(`Failed to delete todo: ${e.message}`);
+      }
+    }
+
+    return {
+      deleted: true,
+      todo: todoInfo
+    };
+  }
+
+  /**
+   * Move a todo to a different project or area
+   */
+  static move(things, params) {
+    const todo = things.toDos.byId(params.id);
+    let destination = null;
+    let destinationType = '';
+
+    // Find destination by ID or title
+    if (params.project_id) {
+      destination = things.projects.byId(params.project_id);
+      destinationType = 'project';
+    } else if (params.project_title) {
+      const projects = things.projects();
+      for (let project of projects) {
+        if (project.name() === params.project_title) {
+          destination = project;
+          destinationType = 'project';
+          break;
+        }
+      }
+    } else if (params.area_id) {
+      destination = things.areas.byId(params.area_id);
+      destinationType = 'area';
+    } else if (params.area_title) {
+      const areas = things.areas();
+      for (let area of areas) {
+        if (area.name() === params.area_title) {
+          destination = area;
+          destinationType = 'area';
+          break;
+        }
+      }
+    } else if (params.list_id) {
+      // Move to a built-in list (Inbox, etc.)
+      destination = things.lists.byId(params.list_id);
+      destinationType = 'list';
+    }
+
+    if (!destination) {
+      throw new Error('Destination not found');
+    }
+
+    // Move the todo
+    if (destinationType === 'project') {
+      todo.project = destination;
+    } else if (destinationType === 'area') {
+      todo.area = destination;
+    } else {
+      // Lists use move command
+      things.move(todo, { to: destination });
+    }
+
+    return {
+      moved: true,
+      todo: {
+        id: todo.id(),
+        name: todo.name()
+      },
+      destination: {
+        type: destinationType,
+        name: destination.name ? destination.name() : params.list_id
+      }
+    };
   }
 }

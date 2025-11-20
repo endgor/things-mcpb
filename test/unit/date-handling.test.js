@@ -68,12 +68,9 @@ suite.test('date is created in system timezone (not UTC)', () => {
   }
   
   // The local date should represent midnight on the specified date in local time
-  const expectedISODate = dateString;
-  const actualISODate = localDate.toISOString().split('T')[0];
-  
-  // Note: this might fail in some timezones due to UTC conversion
-  // but it validates that we're getting the correct date
-  expect.toEqualDate(actualISODate, expectedISODate);
+  // Use local date methods (not toISOString which converts to UTC)
+  const actualDate = `${localDate.getFullYear()}-${String(localDate.getMonth() + 1).padStart(2, '0')}-${String(localDate.getDate()).padStart(2, '0')}`;
+  expect.toEqual(actualDate, dateString);
 });
 
 // Test date formatting for Things 3
