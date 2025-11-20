@@ -58,34 +58,39 @@ This fork adds the following enhancements over the original:
 ## Features
 
 ### 🎯 Core Functionality
-- **Complete Task Management**: Create, read, update, and search todos and projects
+- **Complete Task Management**: Create, read, update, delete, and move todos
+- **Project Management**: Full CRUD operations for projects
+- **Area Management**: Create, update, and delete areas
 - **Smart List Access**: Work with all Things 3 lists (Inbox, Today, Upcoming, Anytime, Someday)
-- **Project & Area Organization**: Full project and area management capabilities
 - **Advanced Search**: Multiple search types across all your Things data
 
-### 🔍 Discovery & Navigation  
-- **Tag Management**: Get all tags and find items by specific tags
+### 🔍 Discovery & Navigation
+- **Tag Management**: Get, find, cleanup unused, and delete tags
 - **Logbook Access**: View completed tasks with flexible time periods
-- **Trash Management**: Access and review trashed items
+- **Trash Management**: Access, review, and empty trashed items
 - **Recent Items**: Find recently modified items
 
 ### 🛠️ Advanced Features
-- **Flexible Updates**: Modify existing tasks and projects with full parameter control
+- **Flexible Scheduling**: Use keywords (`today`, `tomorrow`, `anytime`, `someday`) or dates
+- **Move Operations**: Relocate todos between projects, areas, and lists
 - **Data Integrity**: Comprehensive input validation and error handling
-- **Security**: Built-in AppleScript injection protection and safe execution
-- **User-Friendly Parameters**: Intuitive date terminology and parameter mapping
+- **Security**: Built-in injection protection and safe execution
 
 ## API Reference
 
 ### 📝 Creation Tools
 
 #### `add_todo` - Create a new to-do
-**Required**: `title`  
+**Required**: `title`
 **Optional**: `notes`, `when`, `deadline`, `list_title`, `list_id`, `heading`, `tags`, `checklist_items`
 
-#### `add_project` - Create a new project  
-**Required**: `title`  
+#### `add_project` - Create a new project
+**Required**: `title`
 **Optional**: `notes`, `when`, `deadline`, `area_title`, `area_id`, `tags`, `todos`
+
+#### `add_area` - Create a new area
+**Required**: `title`
+**Optional**: `tags`
 
 ### 📋 List Access Tools
 
@@ -169,10 +174,6 @@ This fork adds the following enhancements over the original:
 **Required**: `tag_name`
 
 ### 📁 Area Management Tools
-
-#### `add_area` - Create a new area
-**Required**: `title`
-**Optional**: `tags`
 
 #### `update_area` - Update an existing area
 **Required**: `id`
