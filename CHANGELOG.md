@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2025-11-20
+
+### Added
+- **Enhanced When Parameter**: Support for `today`, `tomorrow`, `evening`, `anytime`, `someday` keywords
+- **Delete Operations**: `delete_todo`, `delete_project`, `empty_trash` tools
+- **Move Todo**: `move_todo` tool to relocate todos between projects, areas, and lists
+- **Tag Management**: `get_unused_tags` and `delete_tag` tools
+- **Area CRUD**: `add_area`, `update_area`, `delete_area` tools
+- Unit tests for new features (`when-parameter.test.js`, `new-tools.test.js`)
+
+### Fixed
+- Removed hardcoded auth token (security fix) - now requires `THINGS_AUTH_TOKEN` environment variable
+- Fixed `move_todo` to use property assignment for projects/areas instead of move command
+
+### Changed
+- Updated repository URLs to fork (endgor/things-mcpb)
+- Updated README with fork description and auth token setup instructions
+
 ## [1.5.2] - 2025-01-05
 
 ### Changed
