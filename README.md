@@ -13,7 +13,6 @@ This fork adds the following enhancements over the original:
 - **Move Todo**: `move_todo` to relocate todos between projects, areas, and lists
 - **Tag Management**: `get_unused_tags` and `delete_tag` for tag cleanup
 - **Area CRUD**: Full area management with `add_area`, `update_area`, `delete_area`
-- **Security Fix**: Removed hardcoded auth token, requires `THINGS_AUTH_TOKEN` environment variable
 - **Additional Tests**: Unit tests for new features
 
 ## Download
