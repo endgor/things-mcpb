@@ -2,7 +2,7 @@
   "manifest_version": "0.2",
   "name": "things-mcpb",
   "display_name": "Things (AppleScript)",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "description": "Claude Desktop Extension for Things, the award-winning personal task manager",
   "long_description": "This extension provides seamless integration between Claude Desktop and Things task manager through AppleScript automation. Create, manage, and organize your tasks directly from Claude conversations. Features include creating to-dos, projects, areas, tags, and managing your task workflow efficiently.",
   "author": {
@@ -12,11 +12,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mbmccormick/things-mcpb.git"
+    "url": "https://github.com/endgor/things-mcpb.git"
   },
-  "homepage": "https://github.com/mbmccormick/things-mcpb",
-  "documentation": "https://github.com/mbmccormick/things-mcpb/blob/main/README.md",
-  "support": "https://github.com/mbmccormick/things-mcpb/issues",
+  "homepage": "https://github.com/endgor/things-mcpb",
+  "documentation": "https://github.com/endgor/things-mcpb/blob/main/README.md",
+  "support": "https://github.com/endgor/things-mcpb/issues",
   "icon": "icon.png",
   "license": "MIT",
   "keywords": [

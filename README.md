@@ -18,7 +18,7 @@ This fork adds the following enhancements over the original:
 
 ## Download
 
-### [⬇️ Download Latest Release](https://github.com/mbmccormick/things-mcpb/releases/latest)
+### [⬇️ Download Latest Release](https://github.com/endgor/things-mcpb/releases/latest)
 
 ## Quick Start
 
